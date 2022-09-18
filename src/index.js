@@ -1,7 +1,6 @@
-import './css/styles.css';
-
-import './js/fetchCountries';
-
-const DEBOUNCE_DELAY = 300;
+import Notiflix from 'notiflix';
+import axios from 'axios';
+import SimpleLightbox from 'simplelightbox';
+import InfiniteScroll from 'infinite-scroll';
 
 
