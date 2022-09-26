@@ -1,7 +1,7 @@
 import Notiflix from 'notiflix';
 import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
-// import "simplelightbox/dist/simple-lightbox.min.css";
+import 'simplelightbox/dist/simple-lightbox.min.css';
 import InfiniteScroll from 'infinite-scroll';
 
 const refs = {
@@ -79,11 +79,11 @@ function renderingImagesIn(data) {
 
 
 
-let gallery = new SimpleLightbox('.gallery a');
+// let gallery = new SimpleLightbox('.gallery a');
 
 // gallery.next();
 
-// const lightbox = new SimpleLightbox('.gallery a', { enableKeyboard: "true", captionDelay: "250ms", captions: "true", captionSelector: "img", captionType: "attr", captionsData: "alt" });
+const lightbox = new SimpleLightbox('.gallery a', { enableKeyboard: "true", captionDelay: "250ms", captions: "true", captionSelector: "img", captionType: "attr", captionsData: "alt" });
 
 // const { height: cardHeight } = document
 //   .querySelector(".gallery")
