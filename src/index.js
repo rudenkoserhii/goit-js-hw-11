@@ -1,8 +1,7 @@
 import Notiflix from 'notiflix';
 import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-import InfiniteScroll from 'infinite-scroll';
+import '../node_modules/simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = {
     input: document.querySelector('[name="searchQuery"]'),
@@ -13,11 +12,23 @@ const refs = {
 };
 
 const KEY = '30180377-fac51c2acf971fb8cf8c6aeca';
+let pageCount = 0;
 
-async function onSubmitForm(event) {
+refs.btnLoadMore.style.visibility = "hidden";
+
+
+function onSubmitForm(event) {
     event.preventDefault();
+    refs.gallery.replaceChildren('');
+    lightbox.refresh();
+    pageCount = 1;
+    refs.btnLoadMore.style.visibility = "hidden";
     
-    let searchInput = refs.input.value;
+    getResponse(pageCount);
+};
+
+async function getResponse(pageCount) {
+const searchInput = refs.input.value;
     
     if (!searchInput) {
         return Notiflix.Notify.warning('Fill the fields!');
@@ -32,6 +43,8 @@ async function onSubmitForm(event) {
             image_type: 'photo',
             orientation: 'horizontal',
             safesearch: 'true',
+            page: pageCount,
+            per_page: 40,
         },
     });
         
@@ -39,22 +52,38 @@ async function onSubmitForm(event) {
         
     if (data.totalHits === 0) {
         Notiflix.Notify.warning('Sorry, there are no images matching your search query. Please try again.');
-    } else {
+    } else if (data.totalHits > 0 && data.totalHits <= 40 && pageCount === 1) {
         Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
         renderingImagesIn(data);
-        console.log(data);
-        return data;
-        
+    } else if ((pageCount * 40) >= data.totalHits) {
+        Notiflix.Notify.info('We\'re sorry, but you\'ve reached the end of search results.');
+        renderingImagesIn(data);
+        refs.btnLoadMore.style.visibility = "hidden";
+    } else if (data.totalHits >= 40 && pageCount === 1) {
+        Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
+        renderingImagesIn(data);
+        refs.btnLoadMore.style.visibility = "visible";
+    } else {
+        renderingImagesIn(data);
+        refs.btnLoadMore.style.visibility = "visible";
     }
 };
 
+refs.btnLoadMore.addEventListener('click', () => {
+    pageCount += 1;
+    getResponse(pageCount);
+})
+
 refs.form.addEventListener('submit', onSubmitForm);
+
+const lightbox = new SimpleLightbox('.gallery a', { enableKeyboard: "true", captionDelay: "250ms", captions: "true", captionSelector: "img", captionType: "attr", captionsData: "alt" });
+
 
 function renderingImagesIn(data) {
     data.hits.forEach(image => {
         return refs.gallery.insertAdjacentHTML('beforeend',
     `<a class="photo-card" href="${image.largeImageURL}">
-        <img src="${image.previewURL}" alt="${image.tags}" loading="lazy" />
+        <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
     
         <div class="info">
         <p class="info-item">
@@ -74,22 +103,15 @@ function renderingImagesIn(data) {
     )
     });
     
+    
+const { height: cardHeight } = document
+  .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
+    
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: "smooth",
+});
+    
 };
-
-
-
-
-// let gallery = new SimpleLightbox('.gallery a');
-
-// gallery.next();
-
-const lightbox = new SimpleLightbox('.gallery a', { enableKeyboard: "true", captionDelay: "250ms", captions: "true", captionSelector: "img", captionType: "attr", captionsData: "alt" });
-
-// const { height: cardHeight } = document
-//   .querySelector(".gallery")
-//   .firstElementChild.getBoundingClientRect();
-
-// window.scrollBy({
-//   top: cardHeight * 2,
-//   behavior: "smooth",
-// });
