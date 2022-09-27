@@ -140,7 +140,9 @@ function renderingImagesIn(data) {
 
     lightbox.refresh();
     
-
+    const imgs = refs.gallery.querySelectorAll('.img').forEach(img => {
+        img.style.objectFit = "cover";
+    });
     
     const photoLinks = refs.gallery.querySelectorAll('.photo-link').forEach(photoLink => {
         photoLink.style.display = "flex";
