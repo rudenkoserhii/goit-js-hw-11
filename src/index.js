@@ -1,7 +1,7 @@
-import Notiflix from 'notiflix';
-import axios from 'axios';
-import SimpleLightbox from 'simplelightbox';
-import '../node_modules/simplelightbox/dist/simple-lightbox.min.css';
+import Notiflix from "notiflix";
+import axios from "axios";
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const refs = {
     input: document.querySelector('[name="searchQuery"]'),
@@ -14,13 +14,14 @@ const refs = {
 const KEY = '30180377-fac51c2acf971fb8cf8c6aeca';
 let pageCount = 0;
 
+
+
 refs.btnLoadMore.style.visibility = "hidden";
 
 
 function onSubmitForm(event) {
     event.preventDefault();
     refs.gallery.replaceChildren('');
-    lightbox.refresh();
     pageCount = 1;
     refs.btnLoadMore.style.visibility = "hidden";
     
@@ -28,7 +29,8 @@ function onSubmitForm(event) {
 };
 
 async function getResponse(pageCount) {
-const searchInput = refs.input.value;
+    
+    const searchInput = refs.input.value;
     
     if (!searchInput) {
         return Notiflix.Notify.warning('Fill the fields!');
@@ -76,42 +78,44 @@ refs.btnLoadMore.addEventListener('click', () => {
 
 refs.form.addEventListener('submit', onSubmitForm);
 
-const lightbox = new SimpleLightbox('.gallery a', { enableKeyboard: "true", captionDelay: "250ms", captions: "true", captionSelector: "img", captionType: "attr", captionsData: "alt" });
-
-
 function renderingImagesIn(data) {
     data.hits.forEach(image => {
         return refs.gallery.insertAdjacentHTML('beforeend',
-    `<a class="photo-card" href="${image.largeImageURL}">
-        <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
+            `<a class="photo-link" href="${image.largeImageURL}">
+                <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" width=300 height=200 />
+                    <div class="info">
+                    <p class="info-item">
+                    <b>Likes</b>${image.likes}
+                    </p>
+                    <p class="info-item">
+                    <b>Views</b>${image.views}
+                    </p>
+                    <p class="info-item">
+                    <b>Comments</b>${image.comments}
+                    </p>
+                    <p class="info-item">
+                    <b>Downloads</b>${image.downloads}
+                    </p>
+                </div>
+            </a>`
+        )
+    })
+
+    lightbox.refresh();
     
-        <div class="info">
-        <p class="info-item">
-        <b>Likes</b>${image.likes}
-        </p>
-        <p class="info-item">
-        <b>Views</b>${image.views}
-        </p>
-        <p class="info-item">
-        <b>Comments</b>${image.comments}
-        </p>
-        <p class="info-item">
-        <b>Downloads</b>${image.downloads}
-        </p>
-    </div>
-</a>`
-    )
-    });
+    console.log(lightbox);
+};
+
+const lightbox = new SimpleLightbox('.gallery a', { enableKeyboard: "true", captionDelay: "250ms", captions: "true", captionSelector: "img", captionType: "attr", captionsData: "alt" });
+
     
     
-const { height: cardHeight } = document
-  .querySelector(".gallery")
-        .firstElementChild.getBoundingClientRect();
+// const { height: cardHeight } = document
+//   .querySelector(".gallery")
+//         .firstElementChild.getBoundingClientRect();
     
 
-window.scrollBy({
-  top: cardHeight * 2,
-  behavior: "smooth",
-});
-    
-};
+// window.scrollBy({
+//   top: cardHeight * 2,
+//   behavior: "smooth",
+// });
