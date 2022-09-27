@@ -89,27 +89,28 @@ async function getResponse(pageCount) {
     } else if (data.totalHits > 0 && data.totalHits <= 40 && pageCount === 1) {
         Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
         renderingImagesIn(data);
+        scrollStart();
     } else if ((pageCount * 40) >= data.totalHits) {
         Notiflix.Notify.info('We\'re sorry, but you\'ve reached the end of search results.');
         renderingImagesIn(data);
+        scrollMore()
         refs.btnLoadMore.style.visibility = "hidden";
     } else if (data.totalHits >= 40 && pageCount === 1) {
         Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
         renderingImagesIn(data);
+        scrollStart()
         refs.btnLoadMore.style.visibility = "visible";
     } else {
         renderingImagesIn(data);
+        scrollMore()
         refs.btnLoadMore.style.visibility = "visible";
     }
-    
-        scrollStart();
-
 };
 
 refs.btnLoadMore.addEventListener('click', () => {
     pageCount += 1;
     getResponse(pageCount);
-    // scrollMore()
+    scrollMore()
 })
 
 refs.form.addEventListener('submit', onSubmitForm);
@@ -134,10 +135,12 @@ function renderingImagesIn(data) {
                     </p>
                 </div>
             </a>`
-        )
-    })
+        );
+    });
 
     lightbox.refresh();
+    
+
     
     const photoLinks = refs.gallery.querySelectorAll('.photo-link').forEach(photoLink => {
         photoLink.style.display = "flex";
@@ -145,9 +148,7 @@ function renderingImagesIn(data) {
         photoLink.style.justifyContent = "center";
         photoLink.style.flexDirection = "column";
         photoLink.style.textDecoration = "none";
-
     });
-    
     const infoS = refs.gallery.querySelectorAll('.info').forEach(info => {
         info.style.fontFamily = "Century Gothic, sans-serif";
         info.style.display = "flex";
@@ -155,14 +156,12 @@ function renderingImagesIn(data) {
         info.style.justifyContent = "center";
         info.style.gap = "10px";
         info.style.color = "black";
-        
     });
     const infoItemS = refs.gallery.querySelectorAll('.info-item').forEach(infoItem => {
         infoItem.style.display = "flex";
         infoItem.style.alignItems = "center";
         infoItem.style.justifyContent = "center";
         infoItem.style.flexDirection = "column"
-
     });
 };
 
@@ -172,23 +171,20 @@ function scrollStart() {
     const { height: cardHeight } = document
         .querySelector(".gallery")
         .firstElementChild.getBoundingClientRect();
-    
 
     window.scrollBy({
-        top: cardHeight,
+        top: cardHeight * 0.22,
         behavior: "smooth",
     });
 };
     
-// function scrollMore() {
-//     const { height: cardHeight } = document
-//         .querySelector(".gallery")
-//         .firstElementChild.getBoundingClientRect();
-//     cardHeight = '300px';
+function scrollMore() {
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
 
-//     window.scrollBy({
-//         top: cardHeight * 2,
-//         behavior: "smooth",
-//     });
-// };
-// scrollMore();
+    window.scrollBy({
+        top: cardHeight * 2.18,
+        behavior: "smooth",
+    });
+};
