@@ -4,6 +4,7 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 const refs = {
+    body: document.querySelector('body'),
     input: document.querySelector('[name="searchQuery"]'),
     form: document.querySelector('#search-form'),
     btnSearch: document.querySelector('[type="submit"]'),
@@ -14,9 +15,41 @@ const refs = {
 const KEY = '30180377-fac51c2acf971fb8cf8c6aeca';
 let pageCount = 0;
 
+refs.body.style.display = "flex";
+refs.body.style.alignItems = "center";
+refs.body.style.justifyContent = "center";
+refs.body.style.flexDirection = "column";
+
+refs.gallery.style.display = "flex";
+refs.gallery.style.flexWrap = "wrap";
+refs.gallery.style.gap = "10px";
+refs.gallery.style.alignItems = "center";
+refs.gallery.style.justifyContent = "center";
+refs.gallery.style.marginTop = "10px";
+refs.gallery.style.marginBottom = "10px";
 
 
 refs.btnLoadMore.style.visibility = "hidden";
+refs.btnLoadMore.style.fontSize = "20px";
+refs.btnLoadMore.style.fontFamily = "Century Gothic, sans-serif";
+
+refs.input.style.fontSize = "20px";
+refs.input.style.fontFamily = "Century Gothic, sans-serif";
+
+refs.btnSearch.style.fontSize = "20px";
+refs.btnSearch.style.fontFamily = "Century Gothic, sans-serif";
+
+refs.form.style.backgroundColor = "aquamarine";
+refs.form.style.width = "100%";
+refs.form.style.padding = "10px 10px";
+refs.form.style.gap = "10px";
+refs.form.style.display = "flex";
+refs.form.style.justifyContent = "center";
+refs.form.style.alignItems = "center";
+
+
+
+
 
 
 function onSubmitForm(event) {
@@ -24,7 +57,6 @@ function onSubmitForm(event) {
     refs.gallery.replaceChildren('');
     pageCount = 1;
     refs.btnLoadMore.style.visibility = "hidden";
-    
     getResponse(pageCount);
 };
 
@@ -69,11 +101,15 @@ async function getResponse(pageCount) {
         renderingImagesIn(data);
         refs.btnLoadMore.style.visibility = "visible";
     }
+    
+        scrollStart();
+
 };
 
 refs.btnLoadMore.addEventListener('click', () => {
     pageCount += 1;
     getResponse(pageCount);
+    // scrollMore()
 })
 
 refs.form.addEventListener('submit', onSubmitForm);
@@ -82,7 +118,7 @@ function renderingImagesIn(data) {
     data.hits.forEach(image => {
         return refs.gallery.insertAdjacentHTML('beforeend',
             `<a class="photo-link" href="${image.largeImageURL}">
-                <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" width=300 height=200 />
+                <img class="img" src="${image.webformatURL}" alt="${image.tags}" loading="lazy" width=300 height=200 />
                     <div class="info">
                     <p class="info-item">
                     <b>Likes</b>${image.likes}
@@ -103,19 +139,56 @@ function renderingImagesIn(data) {
 
     lightbox.refresh();
     
-    console.log(lightbox);
+    const photoLinks = refs.gallery.querySelectorAll('.photo-link').forEach(photoLink => {
+        photoLink.style.display = "flex";
+        photoLink.style.alignItems = "center";
+        photoLink.style.justifyContent = "center";
+        photoLink.style.flexDirection = "column";
+        photoLink.style.textDecoration = "none";
+
+    });
+    
+    const infoS = refs.gallery.querySelectorAll('.info').forEach(info => {
+        info.style.fontFamily = "Century Gothic, sans-serif";
+        info.style.display = "flex";
+        info.style.alignItems = "center";
+        info.style.justifyContent = "center";
+        info.style.gap = "10px";
+        info.style.color = "black";
+        
+    });
+    const infoItemS = refs.gallery.querySelectorAll('.info-item').forEach(infoItem => {
+        infoItem.style.display = "flex";
+        infoItem.style.alignItems = "center";
+        infoItem.style.justifyContent = "center";
+        infoItem.style.flexDirection = "column"
+
+    });
 };
 
 const lightbox = new SimpleLightbox('.gallery a', { enableKeyboard: "true", captionDelay: "250ms", captions: "true", captionSelector: "img", captionType: "attr", captionsData: "alt" });
 
-    
-    
-// const { height: cardHeight } = document
-//   .querySelector(".gallery")
-//         .firstElementChild.getBoundingClientRect();
+function scrollStart() {
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
     
 
-// window.scrollBy({
-//   top: cardHeight * 2,
-//   behavior: "smooth",
-// });
+    window.scrollBy({
+        top: cardHeight,
+        behavior: "smooth",
+    });
+};
+    
+// function scrollMore() {
+//     const { height: cardHeight } = document
+//         .querySelector(".gallery")
+//         .firstElementChild.getBoundingClientRect();
+//     cardHeight = '300px';
+
+//     window.scrollBy({
+//         top: cardHeight * 2,
+//         behavior: "smooth",
+//     });
+// };
+// scrollMore();
